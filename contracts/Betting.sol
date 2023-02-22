@@ -8,7 +8,7 @@ contract Betting is Ownable{
     // 컨트랙트에 있는 총  클레이튼의 양
     uint public totalMoney = 0; 
     // 베팅 가능 여부
-    bool public limitBetting = true;
+    bool public limitBetting = false;
     uint public coinPrice = 0;
 
     // 베팅한 주소, 양, 어다에 베팅했는지
@@ -47,10 +47,9 @@ contract Betting is Ownable{
     }
 
 
-    function startBetting(uint _coinPrice) public onlyOwner {
+    function startBetting() public onlyOwner {
         require(limitBetting == false, "Already started");
         limitBetting = true;
-        coinPrice = _coinPrice;
     }
 
 
@@ -140,7 +139,8 @@ contract Betting is Ownable{
         upOrDowns[0].totalBet = 0;
         upOrDowns[1].totalBet = 0;
         upOrDowns[2].totalBet = 0;
-        startBetting(_endCoinPrice);
+        startBetting();
+        coinPrice = _endCoinPrice;
         emit EndBetting(block.timestamp);
     }
 
