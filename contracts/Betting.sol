@@ -8,7 +8,7 @@ contract Betting is Ownable{
     // 컨트랙트에 있는 총  클레이튼의 양
     uint public totalMoney = 0; 
     // 베팅 가능 여부
-    bool public limitBetting = false;
+    bool public limitBetting = true;
     uint public coinPrice = 0;
 
     // 베팅한 주소, 양, 어다에 베팅했는지
@@ -62,9 +62,11 @@ contract Betting is Ownable{
     // 베팅하는 함수
     function bet(string memory _upOrDown) public payable {
         require( keccak256(bytes(_upOrDown)) == keccak256(bytes("Up")) || keccak256(bytes(_upOrDown)) == keccak256(bytes("Down")) || keccak256(bytes(_upOrDown)) == keccak256(bytes("Same")), "Onle bet to Up or Down or Same");
-        require( checkBet[msg.sender] == false, "Only betting once.");
-        require(msg.value >= 1 * 10^16,"Minimum betting amount is 0.01.");
         require(limitBetting == true, "wait for the next game");
+        require( checkBet[msg.sender] == false, "Only betting once.");
+        require(msg.value >= (10**16),"Minimum betting amount is 0.01.");
+        require((10**19) >= msg.value,"Maximum betting amount is 10.");
+        
 
         bets.push(Bet(msg.sender, msg.value, _upOrDown));
         checkBet[msg.sender] = true;
@@ -138,6 +140,7 @@ contract Betting is Ownable{
         upOrDowns[0].totalBet = 0;
         upOrDowns[1].totalBet = 0;
         upOrDowns[2].totalBet = 0;
+        startBetting(_endCoinPrice);
         emit EndBetting(block.timestamp);
     }
 
@@ -149,4 +152,4 @@ contract Betting is Ownable{
 
 }
 
-// TODO 분배끝나는것에 대해서 이벤트 발생하기 시간도 적기
+// TODO 컨트렉트 배포시 시작하기

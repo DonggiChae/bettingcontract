@@ -1,20 +1,36 @@
-import { ethers } from "hardhat";
+import { ethers, artifacts } from "hardhat";
+const path = require("path");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const Bet = await ethers.getContractFactory("Betting");
+  const bet = await Bet.deploy();
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  await bet.deployed();
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  console.log(`Address: ${bet.address}`);
+  saveFrontendFiles(bet);
 }
 
+function saveFrontendFiles(lock: any) {
+  const fs = require("fs");
+  const contractsDir = path.join(__dirname, "contracts");
+
+  if (!fs.existsSync(contractsDir)) {
+    fs.mkdirSync(contractsDir);
+  }
+
+  fs.writeFileSync(
+    path.join(contractsDir, "contract-address.json"),
+    JSON.stringify({ lock: lock.address }, undefined, 2)
+  );
+
+  const LockArtifact = artifacts.readArtifactSync("Betting");
+
+  fs.writeFileSync(
+    path.join(contractsDir, "Betting.json"),
+    JSON.stringify(LockArtifact, null, 2)
+  );
+}
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {

@@ -11,3 +11,9 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+
+```shell
+npx hardhat compile
+npx hardhat run scripts/deploy.ts --network klaytn
+npx hardhat run scripts/deploy.ts --network klaytn_cypress
+```
