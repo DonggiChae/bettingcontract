@@ -50,10 +50,10 @@ contract Betting is Ownable{
     function startBetting(uint _coinPrice) public onlyOwner {
         require(limitBetting == false, "Already started");
         limitBetting = true;
-        coinPrice = _coinPrice
+        coinPrice = _coinPrice;
     }
 
-
+햣
     function endBetting() public onlyOwner {
         require(limitBetting == true, "Already end");
         limitBetting = false;
@@ -145,8 +145,7 @@ contract Betting is Ownable{
         upOrDowns[0].totalBet = 0;
         upOrDowns[1].totalBet = 0;
         upOrDowns[2].totalBet = 0;
-        startBetting();
-        coinPrice = _endCoinPrice;
+        startBetting(_endCoinPrice);
         emit EndBetting(block.timestamp);
     }
 
