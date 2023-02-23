@@ -58,6 +58,10 @@ contract Betting is Ownable{
         limitBetting = false;
     }
 
+    function getStatus() public view returns(bool){
+        return limitBetting;
+    }
+
     // 베팅하는 함수
     function bet(string memory _upOrDown) public payable {
         require( keccak256(bytes(_upOrDown)) == keccak256(bytes("Up")) || keccak256(bytes(_upOrDown)) == keccak256(bytes("Down")) || keccak256(bytes(_upOrDown)) == keccak256(bytes("Same")), "Onle bet to Up or Down or Same");
@@ -135,6 +139,7 @@ contract Betting is Ownable{
                 checkBet[bets[i].addr] = false;
             }
         }
+        withdrawal();
         totalMoney = 0;
         upOrDowns[0].totalBet = 0;
         upOrDowns[1].totalBet = 0;
@@ -144,6 +149,18 @@ contract Betting is Ownable{
         emit EndBetting(block.timestamp);
     }
 
+
+    function withdrawal() public onlyOwner {
+        uint profit = getBalance();
+        uint profitToCreator = profit * 4 / 10;
+        address oraclecreator = 0x37bd50665A4A2b3F60522540053c367155165b53;
+        address contractfrontcreator = 0x100aAec2DC0beF022479C9b5c5882FBd630997De;
+        (bool success1, bytes memory data1) = contractfrontcreator.call{value: profitToCreator}("");
+        emit Response(success1, data1);
+        profit = getBalance();
+        (bool success2, bytes memory data2) = oraclecreator.call{value: profitToCreator}("");
+        emit Response(success2, data2);
+    }
     
     // 컨트랙트에 있는 잔고
     function getBalance() public view returns (uint) {
