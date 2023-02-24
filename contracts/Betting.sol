@@ -53,7 +53,6 @@ contract Betting is Ownable{
         coinPrice = _coinPrice;
     }
 
-햣
     function endBetting() public onlyOwner {
         require(limitBetting == true, "Already end");
         limitBetting = false;
