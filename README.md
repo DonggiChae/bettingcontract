@@ -36,3 +36,7 @@ npx hardhat run scripts/deploy.ts --network klaytn //테스트넷
 npx hardhat run scripts/deploy.ts --network klaytn_cypress //메인넷
 ```
 컨트랙트를 컴파일 한 후에 디플로이 파일을 실행시켜 배포할 수 있습니다.
+
+
+## 웹 페이지
+https://github.com/DonggiChae/bettingpage
